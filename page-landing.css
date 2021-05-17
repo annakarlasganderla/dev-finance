@@ -1,0 +1,18 @@
+/* GLOBAL ==============================*/
+* {
+    margin: 0; /* espaçamento externo entre um elemento e outro */
+    padding: 0; /* preenchimento interno do elemento */
+    box-sizing: border-box; /* medida da caixa a partir da borda */
+}
+
+body {
+    background: #f0f2f5;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* HEADER =============================*/
+header {
+    background: #2d4a22;
+    padding: 2rem 0; /* trabalha como um relogio se eu colocar mais de um valor*/
+    text-align: center; /* alinha ao centro */
+}
