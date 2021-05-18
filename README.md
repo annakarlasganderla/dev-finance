@@ -3,7 +3,7 @@
 Plataforma de finanças para devs
 
 Projeto desenvolvido durante a primeira edição da maratona discover da rocketseat <br>
-<a href="https://app.rocketseat.com.br/node/maratona-discover-edicao-01">Link</a<
+<a href="https://app.rocketseat.com.br/node/maratona-discover-edicao-01">Link da maratona</a>
 
 Tecnologias utilizadas
 <ul>
