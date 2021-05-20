@@ -43,12 +43,13 @@ const get = [
   
 // funcionalidades de entreda de dados /// entrada e saída de dinheiro
 const transaction = {
+  all: get,
   incomes () {
     // somar as entradas
     let income = 0
 
     // pegar todas as transaçoes
-    get.forEach(transaction => {
+    transaction.all.forEach(transaction => {
     //  verificar se é maior que 0
       if (transaction.amount > 0) {
       // somar a uma varialvel e retornar a variavel
@@ -62,7 +63,7 @@ const transaction = {
       let expense = 0
   
       // pegar todas as transaçoes
-      get.forEach(transaction => {
+      transaction.all.forEach(transaction => {
       //  verificar se é maior que 0
         if (transaction.amount < 0) {
         // somar a uma varialvel e retornar a variavel
