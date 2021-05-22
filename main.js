@@ -16,25 +16,21 @@ const modal = {
 // funcionabilidade para pegar os valores do usuário
 const get = [
   {
-  id: 1,
   description: 'luz',
   amount: -50000,
   date: '17/05/2021' 
   }, 
   {
-  id: 2,
   description: 'website',
   amount: 500000,
   date: '17/05/2021' 
   }, 
   {
-    id: 3,
     description: 'internet',
     amount: -20000,
     date: '17/05/2021' 
   },
   {
-    id: 4,
     description: 'site2',
     amount: 30000,
     date: '17/05/2021' 
@@ -44,6 +40,17 @@ const get = [
 // funcionalidades de entreda de dados /// entrada e saída de dinheiro
 const transaction = {
   all: get,
+  add(get) {
+    transaction.all.push(get)
+
+    app.reload()
+  },
+  remove(index) {
+    transaction.all.splice(index, 1)
+
+    app.reload()
+
+  },
   incomes () {
     // somar as entradas
     let income = 0
@@ -118,6 +125,10 @@ const DOM = {
 
     document.getElementById('totalDisplay')
     .innerHTML = utils.formatCurrency(transaction.total())
+  },
+
+  clearTransaction() {
+    DOM.transactionsContainer.innerHTML = ""
   }
 }
 
@@ -139,8 +150,58 @@ const utils = {
   }
 }
 
-get.forEach(function(transaction) {
-  DOM.addTransaction(transaction)
-})  // mesma coisa que um for
+// capturar dados do formulário
+const form = {
+  description: document.querySelector('input#description'),
+  amount: document.querySelector('input#amount'),
+  date: document.querySelector('input#date'),
 
-DOM.updateBalance()
+  getValues() {
+    return {
+      description: form.description.value,
+      amount: form.amount.value,
+      date: form.date.value
+    }
+  },
+
+  formatData() {
+    console.log("formatar os dados")
+  },
+  validateField() {
+    console.log("validar os campos")
+  },
+  submit(event) {
+    // nao deixar os dados na caixa de URL
+    event.preventDefault()
+
+    // verificar se todas as informações estao preenchidas
+    form.validateField()
+    // formatar dados para salvar
+    //form.formatData()
+    // salvar
+    // apagar os dados do formulario
+    // fechar MODAL
+    // atualizar aplicação
+  }
+}
+
+const app = {
+  init() {
+
+    transaction.all.forEach(transaction => {
+      DOM.addTransaction(transaction)
+    })  // mesma coisa que um for
+    
+    DOM.updateBalance()
+
+  },
+
+  reload() {
+    DOM.clearTransaction()
+    app.init()
+  },
+}
+
+app.init()
+
+
