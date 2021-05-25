@@ -134,6 +134,18 @@ const DOM = {
 
 // continuação da formatação do valor
 const utils = {
+  formatAmount(value){
+    value = Number(value) * 100
+
+    return value
+  },
+
+  formatDate(date) {
+    const splittedDate = date.split("-")
+    
+    return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
+  },
+
   formatCurrency(value) {
     const signal = Number(value) < 0 ? "-" : ""  // formatação do sinal
 
@@ -163,25 +175,49 @@ const form = {
       date: form.date.value
     }
   },
-
-  formatData() {
-    console.log("formatar os dados")
-  },
   validateField() {
-    console.log("validar os campos")
+    // pegar dados e colocar em uma varialvel
+    const { description, amount, date } = form.getValues()
+    
+    if ( description.trim() === "" ||
+         amount.trim() === "" || 
+         date.trim() === "") {
+           throw new Error("Por favor, preencha todos os campos")
+         }
   },
+
+  formatValues() {
+    let { description, amount, date } = form.getValues()
+
+    amount = utils.formatAmount(amount)
+
+    date = utils.formatDate(date)
+    
+    return {
+      description,
+      amount,
+      date
+    }
+  },
+
   submit(event) {
     // nao deixar os dados na caixa de URL
     event.preventDefault()
 
-    // verificar se todas as informações estao preenchidas
-    form.validateField()
-    // formatar dados para salvar
-    //form.formatData()
-    // salvar
-    // apagar os dados do formulario
-    // fechar MODAL
-    // atualizar aplicação
+    try {
+      // verificar se todas as informações estao preenchidas
+      //form.validateField()
+      // formatar dados para salvar
+      form.formatValues()
+      // salvar
+      // apagar os dados do formulario
+      // fechar MODAL
+      // atualizar aplicação
+
+    } catch (error) {
+      alert(error.message)
+    }
+    
   }
 }
 
