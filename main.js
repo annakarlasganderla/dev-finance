@@ -13,35 +13,28 @@ const modal = {
     }
 }
 
-// funcionabilidade para pegar os valores do usuário
-const get = [
-  {
-  description: 'luz',
-  amount: -50000,
-  date: '17/05/2021' 
-  }, 
-  {
-  description: 'website',
-  amount: 500000,
-  date: '17/05/2021' 
-  }, 
-  {
-    description: 'internet',
-    amount: -20000,
-    date: '17/05/2021' 
+const storage = {
+  // pegar informações
+  get() {
+    return JSON.parse(localStorage.getItem('dev.finances: transactions')) || []
   },
-  {
-    description: 'site2',
-    amount: 30000,
-    date: '17/05/2021' 
+
+  // guardar informações
+  set(transaction) {
+    localStorage.setItem(
+      "dev.finances: transactions", 
+      JSON.stringify(transaction)
+      )
   }
-]
-  
-// funcionalidades de entreda de dados /// entrada e saída de dinheiro
+}
+
+// funcionabilidade para pegar os valores do usuário
 const transaction = {
-  all: get,
-  add(get) {
-    transaction.all.push(get)
+  all: storage.get(),
+
+  // funcionalidades de entreda de dados /// entrada e saída de dinheiro
+  add(transaction) {
+    transaction.all.push(transaction)
 
     app.reload()
   },
@@ -93,13 +86,14 @@ const DOM = {
   // adiciona transação
   addTransaction(transaction, index) {
 
-    const tr = document.createElement('tr')
-    tr.innerHTML = DOM.innerHTMLTransaction(transaction)
+    const tr = document.createElement('tr')           // index é a posiçao do array
+    tr.innerHTML = DOM.innerHTMLTransaction(transaction, index)
+    tr.dataset.index = index
 
     DOM.transactionsContainer.appendChild(tr)
 
   },
-  innerHTMLTransaction(transaction) {
+  innerHTMLTransaction(transaction,index) {
                     // se transaction.amount > 0  fica income senao, troca por expanse
     const CSSclass = transaction.amount > 0 ? "income" : "expense"
 
@@ -111,7 +105,7 @@ const DOM = {
             <td class="${CSSclass}">${amount}</td>
             <td class="date">${transaction.date}</td>
             <td>
-              <img src="./assets/minus.svg" alt="remover">
+              <img onClick="transaction.remove(${index})" src="./assets/minus.svg" alt="remover">
             </td>
     `
     return html
@@ -185,7 +179,6 @@ const form = {
            throw new Error("Por favor, preencha todos os campos")
          }
   },
-
   formatValues() {
     let { description, amount, date } = form.getValues()
 
@@ -199,20 +192,34 @@ const form = {
       date
     }
   },
-
+  clearFields() {
+    form.description.value = ""
+    form.amount.value = ""
+    form.date.value = ""
+  },
+  saveTransaction(transaction) {
+    transaction.add(transaction)
+  },
+  
   submit(event) {
     // nao deixar os dados na caixa de URL
     event.preventDefault()
 
     try {
       // verificar se todas as informações estao preenchidas
-      //form.validateField()
+      form.validateField()
+
       // formatar dados para salvar
-      form.formatValues()
+      const transaction = form.formatValues()
+
       // salvar
+      form.saveTransaction(transaction)
+
       // apagar os dados do formulario
+      form.clearFields()
+
       // fechar MODAL
-      // atualizar aplicação
+      modal.close()
 
     } catch (error) {
       alert(error.message)
@@ -223,13 +230,11 @@ const form = {
 
 const app = {
   init() {
-
-    transaction.all.forEach(transaction => {
-      DOM.addTransaction(transaction)
-    })  // mesma coisa que um for
+    transaction.all.forEach(DOM.addTransaction) // mesma coisa que um for
     
     DOM.updateBalance()
 
+    storage.set(transaction.all)
   },
 
   reload() {
@@ -239,5 +244,6 @@ const app = {
 }
 
 app.init()
+
 
 
